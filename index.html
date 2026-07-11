@@ -250,7 +250,7 @@ html,body{
 }
 #q-drums .qcycle{ color:var(--drums-c); }
 .qdrummer{
-  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  position:absolute;top:10px;right:12px;
   background:transparent;border:none;
   outline:1px solid currentColor;
   font-family:var(--mono);font-size:11px;letter-spacing:3px;
@@ -264,6 +264,7 @@ html,body{
 }
 .qdrummer:hover{ opacity:1; background:rgba(255,255,255,0.06); }
 .qdrummer.on{ opacity:1; background:rgba(255,255,255,0.10); outline-width:2px; }
+#q-drums .qlock{ top:44px; } /* shifted down so it doesn't collide with DRMR above it */
 #q-bass  .qcycle{ color:var(--bass-c);  }
 #q-lead  .qcycle{ color:var(--lead-c);  }
 #q-tex   .qcycle{ color:var(--perc-c);  }
