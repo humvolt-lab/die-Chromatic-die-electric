@@ -142,15 +142,15 @@ html,body{
 
 /* Label top-left */
 .qlabel{
-  position:absolute;top:10px;left:12px;
+  position:absolute;top:10px;left:12px;right:70px;
   display:flex;flex-direction:column;gap:2px;
 }
 .qlabel-name{
-  font-family:var(--display);font-size:28px;letter-spacing:3px;
+  font-family:var(--display);font-size:clamp(18px,6.5vw,28px);letter-spacing:2px;
   line-height:1;
 }
 .qlabel-voice{
-  font-size:9px;letter-spacing:2px;color:#333;text-transform:uppercase;
+  font-size:clamp(7px,2vw,9px);letter-spacing:1px;color:#333;text-transform:uppercase;
 }
 #q-tex .qlabel-voice{
   color:var(--perc-c);opacity:0.85;font-size:11px;
@@ -182,14 +182,17 @@ html,body{
 .qedgehint.gone{ opacity:0; }
 .qedge{
   position:absolute;
-  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  font-family:var(--mono);font-size:clamp(7px,2vw,9px);letter-spacing:1px;
   text-transform:uppercase;white-space:nowrap;
   opacity:0.8;
+  max-width:38%;
+  overflow:hidden;
+  text-overflow:clip;
 }
-.qedge-top{    top:38px;    left:50%; transform:translateX(-50%); }
-.qedge-bottom{ bottom:52px; left:50%; transform:translateX(-50%); }
-.qedge-left{   left:8px;    top:50%; transform:translateY(-50%); }
-.qedge-right{  right:8px;   top:50%; transform:translateY(-50%); }
+.qedge-top{    top:clamp(30px,9vw,38px); left:50%; transform:translateX(-50%); max-width:70%; text-align:center; }
+.qedge-bottom{ bottom:clamp(44px,12vw,52px); left:50%; transform:translateX(-50%); max-width:70%; text-align:center; }
+.qedge-left{   left:6px;  top:50%; transform:translateY(-50%); text-align:left; }
+.qedge-right{  right:6px; top:50%; transform:translateY(-50%); text-align:right; }
 #q-drums .qedge{ color:var(--drums-c); }
 #q-bass  .qedge{ color:var(--bass-c);  }
 #q-lead  .qedge{ color:var(--lead-c);  }
@@ -253,18 +256,19 @@ html,body{
   position:absolute;top:10px;right:12px;
   background:transparent;border:none;
   outline:1px solid currentColor;
-  font-family:var(--mono);font-size:11px;letter-spacing:3px;
-  text-transform:uppercase;padding:8px 14px;
+  font-family:var(--mono);font-size:clamp(8px,2.2vw,11px);letter-spacing:1px;
+  text-transform:uppercase;padding:6px 9px;
   cursor:pointer;
   pointer-events:all;
   transition:background .12s, opacity .12s;
   z-index:20;
   opacity:0.55;
   color:var(--drums-c);
+  white-space:nowrap;
 }
 .qdrummer:hover{ opacity:1; background:rgba(255,255,255,0.06); }
 .qdrummer.on{ opacity:1; background:rgba(255,255,255,0.10); outline-width:2px; }
-#q-drums .qlock{ top:44px; } /* shifted down so it doesn't collide with DRMR above it */
+#q-drums .qlock{ top:42px; } /* shifted down so it doesn't collide with DRMR above it */
 #q-bass  .qcycle{ color:var(--bass-c);  }
 #q-lead  .qcycle{ color:var(--lead-c);  }
 #q-tex   .qcycle{ color:var(--perc-c);  }
@@ -432,7 +436,7 @@ html,body{
       </div>
       <div class="qreadout" id="rd-drums">DRV 50 · COMP 50 · VOL 80</div>
       <button class="qcycle" data-ch="drums">CYCLE <span class="spin">↻</span></button>
-      <button class="qdrummer" id="drummer-toggle-btn">DRMR ⇄</button>
+      <button class="qdrummer" id="drummer-toggle-btn">DRMR</button>
       <button class="qhalftime" data-ch="drums">½</button>
       <div class="dtap-flash" id="flash-drums"></div>
       <div class="qhint" id="hint-drums">
