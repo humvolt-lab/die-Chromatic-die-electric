@@ -606,9 +606,9 @@ let currentRootHz=73.42, currentRootName='D';
 let globalSteps=5;
 
 // ─── VINYL CHARACTER
-// Subtle pitch wobble (simulates warped record), crackle node, and
-// a gentle tape-saturation curve on the master bus.
-let vinylCrackleNode=null, vinylCrackleEnv=null;
+// Subtle pitch wobble (simulates warped record) and a gentle
+// tape-saturation curve on the master bus. (Crackle/pop noise removed —
+// it was audible even with every channel muted.)
 // Wobble is a very slow LFO applied to all oscillator pitches via
 // a shared multiplier updated every scheduler tick.
 let vinylWobble=1.0;         // current pitch multiplier (very close to 1)
@@ -644,17 +644,6 @@ function initAudio(){
   snareBuf=actx.createBuffer(1,Math.floor(sr*0.20),sr);
   {const d=snareBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}
 
-  // Crackle buffer — long looping sparse noise (vinyl surface noise)
-  const crackleLen=Math.floor(sr*3.5);
-  const crackleBuf=actx.createBuffer(1,crackleLen,sr);
-  {
-    const d=crackleBuf.getChannelData(0);
-    for(let i=0;i<crackleLen;i++){
-      // Sparse impulses: most samples silent, occasional pop/tick
-      d[i]=Math.random()<0.0012 ? (Math.random()*2-1)*Math.random() : 0;
-    }
-  }
-
   masterLimiter=actx.createDynamicsCompressor();
   masterLimiter.threshold.value=-1;masterLimiter.knee.value=2;
   masterLimiter.ratio.value=20;masterLimiter.attack.value=0.0003;masterLimiter.release.value=0.04;
@@ -672,14 +661,6 @@ function initAudio(){
 
   // Master chain: channels → comp → tapeHP → tapeSat → tapeShelf → limiter
   masterComp.connect(tapeHP);tapeHP.connect(tapeSat);tapeSat.connect(tapeShelf);tapeShelf.connect(masterLimiter);
-
-  // Vinyl crackle: looping sparse noise at very low level
-  vinylCrackleNode=actx.createBufferSource();
-  vinylCrackleNode.buffer=crackleBuf;vinylCrackleNode.loop=true;
-  const crackleHP=actx.createBiquadFilter();crackleHP.type='highpass';crackleHP.frequency.value=1800;crackleHP.Q.value=0.5;
-  vinylCrackleEnv=actx.createGain();vinylCrackleEnv.gain.value=0.055;
-  vinylCrackleNode.connect(crackleHP);crackleHP.connect(vinylCrackleEnv);vinylCrackleEnv.connect(masterLimiter);
-  vinylCrackleNode.start();
 
   // Init each channel with its own chain:
   // input → preGain → OD → hpFilter → lpFilter → comp → level → panner → masterComp
