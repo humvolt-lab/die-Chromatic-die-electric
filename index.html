@@ -16,7 +16,7 @@
   --bass-c:#ff6600;
   --lead-c:#00e5ff;
   --tex-c:#aaff44;
-  --perc-c:#ffcc44;
+  --perc-c:#b866ff;
   --locked:#ffffff;
   --mono:'Share Tech Mono',monospace;
   --display:'Bebas Neue',sans-serif;
@@ -68,7 +68,10 @@ html,body{
   cursor:pointer;padding:8px 0;width:52px;text-align:center;
   transition:all .12s;
 }
-.bpm-btn:hover{color:#888;outline-color:#888;}
+@media (hover:hover) and (pointer:fine){
+  .bpm-btn:hover{color:#888;outline-color:#888;}
+  #start-btn:hover{color:#fff;outline-color:#fff;}
+}
 .bpm-btn.active{color:#fff;outline-color:#555;}
 #start-btn{
   position:relative;z-index:2;
@@ -79,39 +82,48 @@ html,body{
   cursor:pointer;padding:14px 0;width:240px;text-align:center;
   transition:all .15s;
 }
-#start-btn:hover{color:#fff;outline-color:#fff;}
 
 /* ─── MAIN LAYOUT ─── */
 #main{position:fixed;inset:0;display:none;flex-direction:column;}
 
 /* Title bar */
 #topbar{
-  position:absolute;top:0;left:0;right:0;height:36px;
+  position:absolute;top:0;left:0;right:0;height:56px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 14px;z-index:50;pointer-events:none;
+  box-sizing:border-box;
+}
+#topbar-info{
+  display:flex;flex-direction:column;gap:2px;
+}
+#topbar-buttons{
+  display:flex;gap:8px;
 }
 #topbar-title{
-  font-family:var(--display);font-size:14px;letter-spacing:2px;color:#222;
+  font-family:var(--display);font-size:15px;letter-spacing:2px;color:#888;
 }
-#topbar-bpm{font-size:11px;letter-spacing:3px;color:#222;}
+#topbar-bpm{font-size:11px;letter-spacing:3px;color:#777;}
 #sync-btn, #synccount-btn, #synccycle-btn{
   background:transparent;border:none;
-  outline:1px solid #333;
-  color:#555;
-  font-family:var(--mono);font-size:11px;letter-spacing:4px;
-  text-transform:uppercase;padding:5px 12px;
+  outline:1px solid #666;
+  color:#999;
+  font-family:var(--mono);font-size:10px;line-height:1;letter-spacing:3px;
+  text-transform:uppercase;padding:12px 9px;
   cursor:pointer;
-  transition:all .12s;
+  transition:color .12s, outline-color .12s, box-shadow .12s;
   pointer-events:all;
+  box-sizing:border-box;
 }
-#sync-btn:hover, #synccount-btn:hover, #synccycle-btn:hover{ color:#fff; outline-color:#fff; }
-#sync-btn.armed{ color:#ffcc44; outline-color:#ffcc44; animation:sync-pulse 0.4s ease infinite alternate; }
-#synccount-btn.armed{ color:#44ffcc; outline-color:#44ffcc; animation:sync-pulse 0.4s ease infinite alternate; }
-#synccycle-btn.armed{ color:#00e5ff; outline-color:#00e5ff; animation:sync-pulse 0.4s ease infinite alternate; }
-#sync-btn.fired, #synccount-btn.fired, #synccycle-btn.fired{ color:#fff; outline-color:#fff; }
+@media (hover:hover) and (pointer:fine){
+  #sync-btn:hover, #synccount-btn:hover, #synccycle-btn:hover{ color:#fff; outline-color:#fff; }
+}
+#sync-btn.armed{ color:#ffcc44; outline-color:#ffcc44; outline-width:2px; animation:sync-pulse 0.6s ease infinite alternate; }
+#synccount-btn.armed{ color:#44ffcc; outline-color:#44ffcc; outline-width:2px; animation:sync-pulse 0.6s ease infinite alternate; }
+#synccycle-btn.armed{ color:#00e5ff; outline-color:#00e5ff; outline-width:2px; animation:sync-pulse 0.6s ease infinite alternate; }
+#sync-btn.fired, #synccount-btn.fired, #synccycle-btn.fired{ color:#999; outline-color:#666; }
 @keyframes sync-pulse{
-  from{ opacity:0.5; }
-  to{   opacity:1.0; }
+  from{ box-shadow:0 0 0 rgba(255,255,255,0); }
+  to{   box-shadow:0 0 9px currentColor; }
 }
 
 /* Grid divider */
@@ -119,7 +131,64 @@ html,body{
   position:absolute;inset:0;z-index:0;pointer-events:none;
 }
 .div-h{position:absolute;top:50%;left:0;right:0;height:1px;background:#111;}
-.div-v{position:absolute;left:50%;top:36px;bottom:0;width:1px;background:#111;}
+.div-v{position:absolute;left:50%;top:112px;bottom:0;width:1px;background:#111;}
+
+/* Global glitch row — sits directly under the sync button row */
+#ghost-canvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;
+  z-index:40;
+}
+
+#glitchrow{
+  position:absolute;top:56px;left:0;right:0;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;box-sizing:border-box;
+  z-index:50;pointer-events:none;
+}
+#glitch-btn, #halfspeed-btn, #tempofilter-btn{
+  background:rgba(8,8,10,0.92);
+  border:none;
+  outline:2px solid #555;
+  color:#888;
+  font-family:var(--mono);font-size:10px;line-height:1;letter-spacing:2px;
+  text-transform:uppercase;
+  padding:16px 22px;border-radius:4px;
+  cursor:pointer;
+  pointer-events:all;
+  touch-action:none;
+  -webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .1s, outline-color .1s, color .1s, transform .1s;
+}
+#tempofilter-btn.active{
+  outline-color:#44ff88;
+  outline-width:3px;
+  color:#fff;
+  background:rgba(68,255,136,0.22);
+}
+#glitch-btn.active{
+  outline-color:#ff2244;
+  outline-width:3px;
+  color:#fff;
+  background:rgba(255,34,68,0.30);
+  transform:scale(1.06);
+  animation:glitch-jitter 0.12s steps(2) infinite;
+}
+#halfspeed-btn.active{
+  outline-color:#00e5ff;
+  outline-width:3px;
+  color:#fff;
+  background:rgba(0,229,255,0.22);
+}
+@keyframes glitch-jitter{
+  0%  { transform:scale(1.06) translateX(0px); }
+  50% { transform:scale(1.06) translateX(1px); }
+  100%{ transform:scale(1.06) translateX(0px); }
+}
+@media (hover:hover) and (pointer:fine){
+  #glitch-btn:hover, #halfspeed-btn:hover, #tempofilter-btn:hover{ outline-color:#888; color:#ccc; }
+}
 
 /* ─── QUADRANT PADS ─── */
 .quad{
@@ -128,12 +197,13 @@ html,body{
   cursor:crosshair;
   touch-action:none;
 }
-#q-drums{top:36px;left:0;width:50%;height:calc(50% - 18px);}
-#q-bass {top:36px;right:0;width:50%;height:calc(50% - 18px);}
-#q-lead {bottom:0;left:0;width:50%;height:calc(50% - 18px);}
-#q-tex  {bottom:0;right:0;width:50%;height:calc(50% - 18px);}
+#q-drums{top:112px;left:0;width:50%;height:calc(50% - 56px);}
+#q-bass {top:112px;right:0;width:50%;height:calc(50% - 56px);}
+#q-lead {bottom:0;left:0;width:50%;height:calc(50% - 56px);}
+#q-tex  {bottom:0;right:0;width:50%;height:calc(50% - 56px);}
 
 .quad-canvas{position:absolute;inset:0;width:100%;height:100%;}
+#c-tex{transition:opacity 0.7s ease;}
 
 /* ─── QUAD HUD OVERLAY ─── */
 .quad-hud{
@@ -150,7 +220,7 @@ html,body{
   line-height:1;
 }
 .qlabel-voice{
-  font-size:clamp(7px,2vw,9px);letter-spacing:1px;color:#333;text-transform:uppercase;
+  font-size:clamp(7px,2vw,9px);letter-spacing:1px;color:#999;text-transform:uppercase;
 }
 #q-tex .qlabel-voice{
   color:var(--perc-c);opacity:0.85;font-size:11px;
@@ -199,7 +269,7 @@ html,body{
 /* Halftime button — bottom-left, same weight as cycle */
 .qhalftime{
   position:absolute;bottom:12px;left:12px;
-  background:transparent;border:none;
+  background:rgba(6,6,8,0.72);border:none;
   outline:1px solid currentColor;
   font-family:var(--mono);font-size:11px;letter-spacing:3px;
   text-transform:uppercase;padding:8px 14px;
@@ -207,30 +277,28 @@ html,body{
   pointer-events:all;
   transition:background .12s, opacity .12s, outline-width .08s;
   z-index:20;
-  opacity:0.55;
+  opacity:0.78;
 }
-.qhalftime:hover{ opacity:1; background:rgba(255,255,255,0.06); }
 .qhalftime:active{ opacity:1; }
-.qhalftime.on{ opacity:1; background:rgba(255,255,255,0.10); outline-width:2px; }
+.qhalftime.on{ opacity:1; background:rgba(6,6,8,0.85); outline-width:2px; }
 #q-drums .qhalftime{ color:var(--drums-c); }
 #q-bass  .qhalftime{ color:var(--bass-c);  }
 #q-lead  .qhalftime{ color:var(--lead-c);  }
 #q-tex   .qhalftime{ color:var(--perc-c);  }
 .qsynth-clr{
   position:absolute;top:10px;right:12px;
-  background:transparent;border:none;
+  background:rgba(6,6,8,0.72);border:none;
   outline:1px solid var(--perc-c);
   color:var(--perc-c);
   font-family:var(--mono);font-size:11px;letter-spacing:3px;
   text-transform:uppercase;padding:8px 14px;
   cursor:pointer;pointer-events:all;
   transition:background .12s, opacity .12s;
-  z-index:20;opacity:0.55;
+  z-index:20;opacity:0.78;
 }
-.qsynth-clr:hover{ opacity:1; background:rgba(255,255,255,0.06); }
 .qcycle{
   position:absolute;bottom:12px;right:12px;
-  background:transparent;border:none;
+  background:rgba(6,6,8,0.72);border:none;
   outline:1px solid currentColor;
   font-family:var(--mono);font-size:11px;letter-spacing:3px;
   text-transform:uppercase;padding:8px 14px;
@@ -238,9 +306,8 @@ html,body{
   pointer-events:all;
   transition:background .12s, opacity .12s;
   z-index:20;
-  opacity:0.55;
+  opacity:0.78;
 }
-.qcycle:hover{ opacity:1; background:rgba(255,255,255,0.06); }
 .qcycle:active{ opacity:1; }
 .qcycle .spin{ display:inline-block; }
 .qcycle.spinning .spin{ animation:cycle-spin 0.35s ease-out; }
@@ -252,7 +319,7 @@ html,body{
 #q-drums .qcycle{ color:var(--drums-c); }
 .qdrummer{
   position:absolute;top:10px;right:12px;
-  background:transparent;border:none;
+  background:rgba(6,6,8,0.72);border:none;
   outline:1px solid currentColor;
   font-family:var(--mono);font-size:clamp(8px,2.2vw,11px);letter-spacing:1px;
   text-transform:uppercase;padding:6px 9px;
@@ -260,28 +327,33 @@ html,body{
   pointer-events:all;
   transition:background .12s, opacity .12s;
   z-index:20;
-  opacity:0.55;
+  opacity:0.78;
   color:var(--drums-c);
   white-space:nowrap;
 }
-.qdrummer:hover{ opacity:1; background:rgba(255,255,255,0.06); }
-.qdrummer.on{ opacity:1; background:rgba(255,255,255,0.10); outline-width:2px; }
+.qdrummer.on{ opacity:1; background:rgba(6,6,8,0.85); outline-width:2px; }
 #q-drums .qlock{ top:42px; } /* shifted down so it doesn't collide with DRMR above it */
 #q-bass  .qcycle{ color:var(--bass-c);  }
 #q-lead  .qcycle{ color:var(--lead-c);  }
 #q-tex   .qcycle{ color:var(--perc-c);  }
 .qsynth-cycle{
   position:absolute;bottom:12px;right:12px;
-  background:transparent;border:none;
+  background:rgba(6,6,8,0.72);border:none;
   outline:1px solid var(--perc-c);
   color:var(--perc-c);
   font-family:var(--mono);font-size:11px;letter-spacing:3px;
   text-transform:uppercase;padding:8px 14px;
   cursor:pointer;pointer-events:all;
   transition:background .12s, opacity .12s;
-  z-index:20;opacity:0.55;
+  z-index:20;opacity:0.78;
 }
-.qsynth-cycle:hover{ opacity:1; background:rgba(255,255,255,0.06); }
+@media (hover:hover) and (pointer:fine){
+  .qhalftime:hover,
+  .qsynth-clr:hover,
+  .qcycle:hover,
+  .qdrummer:hover,
+  .qsynth-cycle:hover{ opacity:1; background:rgba(6,6,8,0.85); }
+}
 .qsynth-cycle:active{ opacity:1; }
 
 /* XY crosshair lines */
@@ -407,11 +479,15 @@ html,body{
 <!-- ═══ MAIN ═══ -->
 <div id="main">
   <div id="topbar">
-    <div id="topbar-title">DIE ELECTRIC DIE CHROMATIC</div>
-    <div id="topbar-bpm">110 BPM</div>
-    <button id="sync-btn">SYNC START</button>
-    <button id="synccount-btn">SYNC COUNT</button>
-    <button id="synccycle-btn">SYNC + CYCLE</button>
+    <div id="topbar-info">
+      <div id="topbar-title"></div>
+      <div id="topbar-bpm">110 BPM</div>
+    </div>
+    <div id="topbar-buttons">
+      <button id="sync-btn">SYNC TO LONGEST</button>
+      <button id="synccount-btn">SYNC TO DRUMS</button>
+      <button id="synccycle-btn">SYNC + CYCLE</button>
+    </div>
   </div>
 
   <div id="grid">
@@ -437,7 +513,7 @@ html,body{
         <span class="qedge qedge-left">← DRY</span>
         <span class="qedge qedge-right">CRUSH →</span>
       </div>
-      <div class="qreadout" id="rd-drums">DRV 50 · COMP 50 · VOL 80</div>
+      <div class="qreadout" id="rd-drums">DRV 50 · COMP 50</div>
       <button class="qcycle" data-ch="drums">CYCLE <span class="spin">↻</span></button>
       <button class="qdrummer" id="drummer-toggle-btn">DRMR</button>
       <button class="qhalftime" data-ch="drums">½</button>
@@ -464,12 +540,12 @@ html,body{
       <div class="qcross-h" id="ch-bass" style="top:50%"></div>
       <div class="qcross-v" id="cv-bass" style="left:50%"></div>
       <div class="qedgehint" id="edgehint-bass">
-        <span class="qedge qedge-top">LOUD ↑</span>
-        <span class="qedge qedge-bottom">↓ QUIET</span>
+        <span class="qedge qedge-top">SLAMMED ↑</span>
+        <span class="qedge qedge-bottom">↓ OPEN</span>
         <span class="qedge qedge-left">← SUB</span>
         <span class="qedge qedge-right">GRIT →</span>
       </div>
-      <div class="qreadout" id="rd-bass">DRV 50 · FILTER 50 · VOL 80</div>
+      <div class="qreadout" id="rd-bass">DRV 50 · FILTER 50 · COMP 50</div>
       <button class="qcycle" data-ch="bass">CYCLE <span class="spin">↻</span></button>
       <button class="qhalftime" data-ch="bass">½</button>
       <div class="dtap-flash" id="flash-bass"></div>
@@ -495,12 +571,12 @@ html,body{
       <div class="qcross-h" id="ch-lead" style="top:50%"></div>
       <div class="qcross-v" id="cv-lead" style="left:50%"></div>
       <div class="qedgehint" id="edgehint-lead">
-        <span class="qedge qedge-top">LOUD ↑</span>
-        <span class="qedge qedge-bottom">↓ QUIET</span>
+        <span class="qedge qedge-top">SLAMMED ↑</span>
+        <span class="qedge qedge-bottom">↓ OPEN</span>
         <span class="qedge qedge-left">← DARK</span>
         <span class="qedge qedge-right">BRIGHT →</span>
       </div>
-      <div class="qreadout" id="rd-lead">DRV 50 · FILTER 50 · VOL 58</div>
+      <div class="qreadout" id="rd-lead">DRV 50 · FILTER 50 · COMP 50</div>
       <button class="qcycle" data-ch="lead">CYCLE <span class="spin">↻</span></button>
       <button class="qhalftime" data-ch="lead">½</button>
       <div class="dtap-flash" id="flash-lead"></div>
@@ -541,6 +617,16 @@ html,body{
       </div>
     </div>
   </div>
+
+  <!-- GLOBAL controls — half-speed tape on the left, glitch on the right -->
+  <div id="glitchrow">
+    <button id="halfspeed-btn">50%</button>
+    <button id="tempofilter-btn">FILTER</button>
+    <button id="glitch-btn">GLITCH</button>
+  </div>
+
+  <!-- Ghost node — occasionally travels from one XY pad to another -->
+  <canvas id="ghost-canvas"></canvas>
 </div>
 
 <script>
@@ -579,6 +665,9 @@ const SCALES = {
   'FUNK MIN':  [0,2,3,5,7,9,10],   // dorian with a flatter 3rd feel — JBs
   'HIRAJOSHI': [0,2,3,7,8],        // Japanese koto records, world music bin
   'WHOLETONE': [0,2,4,6,8,10],     // Debussy, library music, dusty 60s avant
+  'OCTATONIC': [0,2,3,5,6,8,9,11], // symmetrical diminished scale, jazz/film tension
+  'PERSIAN':   [0,1,4,5,6,8,11],   // Persian classical scale, sharp exotic edge
+  'HIJAZ':     [0,1,4,5,7,8,10],   // Arabic maqam Hijaz, snake-charmer character
 };
 const ROOTS = {
   D:[36.71,73.42,146.83],G:[49.00,98.00,196.00],
@@ -693,12 +782,20 @@ function initAudio(){
       panner.gain.value = 1.0;
     }
     ch.panner = panner;
+    // Per-channel tempo filter — lets the FILTER effect sweep each
+    // channel independently, so cycling one sound can release just
+    // that channel while the others stay filtered.
+    ch.tempoFilter=actx.createBiquadFilter();
+    ch.tempoFilter.type='lowpass';
+    ch.tempoFilter.frequency.value=19000;
+    ch.tempoFilter.Q.value=0.7;
     ch.preGain.connect(ch.od);
     ch.od.connect(ch.hpFilter);
     ch.hpFilter.connect(ch.lpFilter);
     ch.lpFilter.connect(ch.comp);
     ch.comp.connect(ch.level);
-    ch.level.connect(ch.panner);
+    ch.level.connect(ch.tempoFilter);
+    ch.tempoFilter.connect(ch.panner);
     ch.panner.connect(masterComp);
     // XY state
     ch.xyX=0.5; ch.xyY=0.5;
@@ -727,27 +824,35 @@ function applyChannelXY(name){
   const driveAmt = 1.0 + y * 12.0;
   ch.od.curve = makeODCurve(driveAmt);
 
-  // Filter cutoff: X sweeps LP from dark (200Hz) to bright (12kHz) per channel
-  let lpFreq, hpFreq;
+  // Filter cutoff: X sweeps LP from dark to bright per channel — widened
+  // ranges + resonance (Q) that builds with X for a more dramatic sweep
+  let lpFreq, hpFreq, lpQ, hpQ;
   if(name==='drums'){
-    lpFreq = 300 + Math.pow(x, 1.8) * 14000;
-    hpFreq = 30;
+    lpFreq = 150 + Math.pow(x, 2.2) * 17000;
+    hpFreq = 20 + x * 50;
+    lpQ = 0.8 + x * 7;
+    hpQ = 0.7;
     // Compression: Y increases ratio (tighter at bottom, smashed at top)
     ch.comp.ratio.setTargetAtTime(3 + y * 14, now, 0.05);
     ch.comp.threshold.setTargetAtTime(-24 + y * 10, now, 0.05);
   } else if(name==='bass'){
-    lpFreq = 80 + Math.pow(x, 1.5) * 700;
-    hpFreq = 30 + y * 60;
+    lpFreq = 40 + Math.pow(x, 2.0) * 3800;
+    hpFreq = 20 + y * 150;
+    lpQ = 1.0 + Math.pow(x, 1.5) * 14;
+    hpQ = 0.7;
     ch.comp.ratio.setTargetAtTime(4 + y * 10, now, 0.05);
     ch.comp.threshold.setTargetAtTime(-20 + y * 8, now, 0.05);
   } else if(name==='lead'){
-    lpFreq = 800 + Math.pow(x, 1.4) * 10000;
-    hpFreq = 200 + (1-x) * 800;
+    lpFreq = 250 + Math.pow(x, 1.8) * 15800;
+    hpFreq = 100 + (1-x) * 2200;
+    lpQ = 1.2 + x * 9;
+    hpQ = 0.7 + (1-x) * 5;
     ch.comp.ratio.setTargetAtTime(3 + y * 8, now, 0.05);
     ch.comp.threshold.setTargetAtTime(-22 + y * 8, now, 0.05);
   } else { // synth pad — X = filter, Y = not used by applyChannelXY (Y maps to note zone live)
     lpFreq = 300 + Math.pow(x, 1.5) * 11000;
     hpFreq = 120;
+    lpQ = 1.2; hpQ = 0.7;
     ch.comp.ratio.setTargetAtTime(3 + y * 8, now, 0.05);
     ch.comp.threshold.setTargetAtTime(-20 + y * 6, now, 0.05);
     synthUpdateFilter(x);
@@ -755,12 +860,14 @@ function applyChannelXY(name){
 
   ch.lpFilter.frequency.setTargetAtTime(Math.min(lpFreq, actx.sampleRate/2.2), now, 0.025);
   ch.hpFilter.frequency.setTargetAtTime(Math.max(20, hpFreq), now, 0.025);
+  ch.lpFilter.Q.setTargetAtTime(lpQ, now, 0.025);
+  ch.hpFilter.Q.setTargetAtTime(hpQ, now, 0.025);
 
-  // Volume: Y controls level — skip if muted so gain stays at 0
+  // Volume: fixed at base level — XY no longer controls volume,
+  // only mute/unmute does
   const baseVol = name==='drums'?1.10 : name==='bass'?0.90 : name==='lead'?0.58 : 0.72;
   if(!ch.muted){
-    const volScale = 0.15 + y * 0.85;
-    ch.level.gain.setTargetAtTime(baseVol * volScale, now, 0.03);
+    ch.level.gain.setTargetAtTime(baseVol, now, 0.03);
   }
 
   updateChannelReadout(name);
@@ -769,13 +876,13 @@ function applyChannelXY(name){
 function updateChannelReadout(name){
   const ch=CH[name];
   const drv=Math.round(ch.xyX*100);
-  const vol=Math.round((0.15+ch.xyY*0.85)*100);
+  const comp=Math.round(ch.xyY*100);
   const filter=Math.round(ch.xyX*100);
   const el=document.getElementById('rd-'+name);
   if(!el) return;
-  if(name==='drums') el.textContent=`DRV ${drv} · COMP ${Math.round(ch.xyY*100)} · VOL ${vol}`;
-  else if(name==='bass') el.textContent=`DRV ${drv} · FILTER ${filter} · VOL ${vol}`;
-  else if(name==='lead') el.textContent=`DRV ${drv} · FILTER ${filter} · VOL ${vol}`;
+  if(name==='drums') el.textContent=`DRV ${drv} · COMP ${comp}`;
+  else if(name==='bass') el.textContent=`DRV ${drv} · FILTER ${filter} · COMP ${comp}`;
+  else if(name==='lead') el.textContent=`DRV ${drv} · FILTER ${filter} · COMP ${comp}`;
   else el.textContent=`FILTER ${filter} · ${STATE.tex.playing?Math.round(STATE.tex.currentFreq)+'Hz':'TOUCH TO PLAY'}`;
 }
 
@@ -837,12 +944,12 @@ const SYNTH_VOICES=['SUPER SAW','HOLLOW','GLASS','REESE','STRINGS','PULSE','DRIF
 // so they get a lower level to match the rest of the set.
 const SYNTH_VOICE_GAIN = {
   'SUPER SAW': 0.06,   // 0.075 - 20%
-  'HOLLOW':    0.12,
-  'GLASS':     0.12,
+  'HOLLOW':    0.19,
+  'GLASS':     0.145,
   'REESE':     0.0675, // 0.075 - 10%
   'STRINGS':   0.065,
   'PULSE':     0.063,  // 0.07 - 10%
-  'DRIFT':     0.12,
+  'DRIFT':     0.145,
 };
 // PERC channel replaced by playable SYNTH pad
 
@@ -1104,14 +1211,73 @@ function genFillTribal(type, N){
   return genTribalFill_PolyRoll(N);
 }
 
+// ── BREAKBEAT FILLS — the third drummer's phrase events. Built around
+// the classic chopped-loop moves: kick/snare displacement, dense ghost
+// snare flurries, rapid hat chatter, and a crash/ride accent.
+function genBreakFill_AmenFlip(N){
+  const kick=new Array(N).fill(null), snare=new Array(N).fill(null);
+  const hat=new Array(N).fill(null),  tom=new Array(N).fill(null);
+  kick[0]=[accent()];
+  const start=Math.max(1,Math.floor(N*0.5));
+  for(let i=start;i<N;i++){
+    const ratio=(i-start)/(N-start);
+    if(i%2===0) kick[i]=[mkHit(0,0.5+ratio*0.4,'main')];
+    else snare[i]=[mkHit(0,0.4+ratio*0.5,'main')];
+    hat[i]=[mkHit(0,0.3+ratio*0.4,'ghost')];
+  }
+  return {kick,snare,hat,tom};
+}
+function genBreakFill_GhostFlurry(N){
+  const kick=new Array(N).fill(null), snare=new Array(N).fill(null);
+  const hat=new Array(N).fill(null),  tom=new Array(N).fill(null);
+  kick[0]=[accent()];
+  for(let i=1;i<N;i++){
+    snare[i]=[mkHit(0, 0.15+Math.random()*0.35, Math.random()<0.3?'main':'ghost')];
+  }
+  snare[N-1]=[accent()];
+  return {kick,snare,hat,tom};
+}
+function genBreakFill_HatChatter(N){
+  const kick=new Array(N).fill(null), snare=new Array(N).fill(null);
+  const hat=new Array(N).fill(null),  tom=new Array(N).fill(null);
+  kick[0]=[accent()];
+  for(let i=0;i<N;i++){
+    hat[i]=[mkHit(0,0.32,'main'), mkHit(0.5,0.22,'ghost')];
+  }
+  snare[Math.max(1,Math.floor(N*0.75))]=[accent()];
+  return {kick,snare,hat,tom};
+}
+function genBreakFill_RideCrash(N){
+  const kick=new Array(N).fill(null), snare=new Array(N).fill(null);
+  const hat=new Array(N).fill(null),  tom=new Array(N).fill(null);
+  kick[0]=[accent()];
+  tom[0]=[accent()]; // crash/ride accent via the rimshot voice
+  hat[N-1]=[mkHit(0,0.2,'ghost')];
+  return {kick,snare,hat,tom};
+}
+const FILL_TYPES_BREAK=['amenflip','ghostflurry','hatchatter','ridecrash'];
+function genFillBreak(type, N){
+  if(type==='amenflip')     return genBreakFill_AmenFlip(N);
+  if(type==='ghostflurry')  return genBreakFill_GhostFlurry(N);
+  if(type==='hatchatter')   return genBreakFill_HatChatter(N);
+  if(type==='ridecrash')    return genBreakFill_RideCrash(N);
+  return genBreakFill_AmenFlip(N);
+}
+
 // Picks a fill type from whichever drummer is currently active
 function pickFillType(){
-  return STATE.drums.drummerIdx===1 ? pick(FILL_TYPES_TRIBAL) : pick(FILL_TYPES);
+  const idx=STATE.drums.drummerIdx;
+  if(idx===1) return pick(FILL_TYPES_TRIBAL);
+  if(idx===2) return pick(FILL_TYPES_BREAK);
+  return pick(FILL_TYPES);
 }
 
 function armDrumFill(fillType){
   const ds=STATE.drums;
-  const fills = FILL_TYPES.includes(fillType) ? genFill(fillType, ds.steps) : genFillTribal(fillType, ds.steps);
+  let fills;
+  if(FILL_TYPES.includes(fillType))            fills=genFill(fillType, ds.steps);
+  else if(FILL_TYPES_BREAK.includes(fillType))  fills=genFillBreak(fillType, ds.steps);
+  else                                           fills=genFillTribal(fillType, ds.steps);
   ds._fillKick  = fills.kick;
   ds._fillSnare = fills.snare;
   ds._fillHat   = fills.hat;
@@ -1303,7 +1469,63 @@ function genSnareMachine(N){
   return p;
 }
 
-const DRUMMER_LABELS=['KICK · HAT · SNARE','DJEMBE · SHAKER · LOW TOM'];
+// ═══════════════════════════════════════════════════════
+// THIRD DRUMMER — "THE BREAKS"
+// A classic chopped-loop breakbeat feel: syncopated kick, a busy
+// backbeat snare thick with ghost notes, and near-continuous swung
+// hats. Sampled-acoustic character rather than synth or hand-drum —
+// same X/Y macro controls, a different session entirely.
+// ═══════════════════════════════════════════════════════
+function genKickBreak(N, ch){
+  const y=ch.xyY||0.5;
+  const p=new Array(N).fill(null);
+  p[0]=[accent()];
+  // Signature syncopated kick placement — the "and" before the midpoint
+  const syncPos=Math.max(1,Math.floor(N*0.4));
+  p[syncPos]=[normal()];
+  const dens=0.08+y*0.22;
+  for(let i=1;i<N;i++){
+    if(i!==syncPos && Math.random()<dens) p[i]=[Math.random()<0.3?ghost():normal()];
+  }
+  return p;
+}
+function genTomBreak(N, ch){
+  // Rimshot accents — sparse syncopation flavor from the 4th voice
+  const x=ch.xyX||0.5, y=ch.xyY||0.5;
+  const p=new Array(N).fill(null);
+  const dens=0.06+(x*0.5+y*0.5)*0.16;
+  for(let i=1;i<N;i++){
+    if(i%2===1 && Math.random()<dens+0.08) p[i]=[Math.random()<0.5?ghost():normal()];
+  }
+  return p;
+}
+function genHatBreak(N, ch){
+  // Near-continuous swung hats, brightness/density from X
+  const x=ch.xyX||0.5;
+  const dens=0.65+x*0.32;
+  const p=new Array(N).fill(null);
+  for(let i=0;i<N;i++){
+    if(Math.random()<dens) p[i]=[i%4===0?accent():(Math.random()<0.35?ghost():normal())];
+  }
+  p[0]=[accent()];
+  return p;
+}
+function genSnareBreak(N, ch){
+  // Backbeat plus a thick bed of ghost snares — the breakbeat signature
+  const y=ch.xyY||0.5;
+  const p=new Array(N).fill(null);
+  const b1=Math.max(1,Math.floor(N*0.25));
+  const b2=Math.min(N-1,Math.floor(N*0.75));
+  p[b1]=[accent()];
+  if(b2!==b1) p[b2]=[accent()];
+  const ghostDens=0.20+y*0.35;
+  for(let i=0;i<N;i++){
+    if(!p[i] && Math.random()<ghostDens) p[i]=[ghost()];
+  }
+  return p;
+}
+
+const DRUMMER_LABELS=['KICK · HAT · SNARE','DJEMBE · SHAKER · LOW TOM','BREAK · SNARE · HAT'];
 
 function genBassPattern(N){
   const ch=CH.bass;
@@ -1340,6 +1562,10 @@ function pickSteps(){ return pick(STEP_POOL); }
 
 function cycleChannel(name){
   if(!name||!STATE[name]) return;
+  // Cycling a sound plays it unfiltered immediately, even if the FILTER
+  // button currently has the mix swept down — other channels stay
+  // filtered until they're cycled too, or FILTER is pressed again.
+  releaseChannelTempoFilter(name);
   if(name==='drums'){
     const ds=STATE.drums;
     if(!CH.drums.locked) ds.steps=pickSteps();
@@ -1349,6 +1575,11 @@ function cycleChannel(name){
       ds.tom   =genTomMachine(N,CH.drums);
       ds.hat   =genHatMachine(N,CH.drums);
       ds.snare =genSnareMachine(N);
+    } else if(ds.drummerIdx===2){
+      ds.kick  =genKickBreak(N,CH.drums);
+      ds.tom   =genTomBreak(N,CH.drums);
+      ds.hat   =genHatBreak(N,CH.drums);
+      ds.snare =genSnareBreak(N,CH.drums);
     } else {
       ds.kick  =genKick(N,CH.drums);
       ds.tom   =genTom(N,CH.drums);
@@ -1395,8 +1626,8 @@ function cycleChannel(name){
     document.getElementById('voice-lead').textContent=ls.voice;
     buildStepBar('lead');
   } else if(name==='tex'){
-    // Synth pad — nothing to cycle, notes come from current scale live
-    document.getElementById('voice-tex').textContent='TOUCH TO PLAY';
+    // Synth pad — cycle the voice, same as tapping the synth's own CYCLE button
+    cycleSynthVoice();
   }
 }
 
@@ -1409,6 +1640,186 @@ let syncArmed      = false;
 let syncReady      = {drums:false, bass:false, lead:false};
 let syncCycleArmed = false;
 let syncCountArmed = false;
+
+// ═══════════════════════════════════════════════════════
+// GLOBAL GLITCH — press-and-hold beat-repeat.
+// Snapshots the drums' current step count as a "master" step count,
+// slices it into randomly-sized chunks (e.g. 16 → [3,3,4,6]), and
+// stutters through them: each chunk plays once, repeats once, then
+// the clock advances to the next chunk. Drums/bass/lead all read the
+// same shared step index (wrapped to their own length) while held,
+// so everything locks to the same glitch grid. Releasing the button
+// returns every channel to wherever its normal step counter was
+// frozen — no jump, no silence.
+// ═══════════════════════════════════════════════════════
+let glitchActive      = false;
+let glitchMasterN     = 16;
+let glitchChunks      = [];
+let glitchChunkIdx    = 0;
+let glitchStepInChunk = 0;
+let glitchRepeatPass  = 0;
+let glitchSourcePos   = 0;
+const GLITCH_CHUNK_POOL = [1,2,3,4,6,8];
+
+function generateGlitchChunks(N){
+  const pool = GLITCH_CHUNK_POOL.filter(c=>c<=N);
+  const chunks=[];
+  let remaining=N;
+  while(remaining>0){
+    const valid = pool.filter(c=>c<=remaining);
+    const c = valid.length ? pick(valid) : remaining;
+    chunks.push(c);
+    remaining-=c;
+  }
+  return chunks;
+}
+
+// Returns the shared step index to fire this tick, then advances the
+// chunk/repeat/source-pointer state for the next call.
+function advanceGlitchClock(){
+  const chunkLen = glitchChunks[glitchChunkIdx] || 1;
+  const idx = (glitchSourcePos + glitchStepInChunk) % glitchMasterN;
+  glitchStepInChunk++;
+  if(glitchStepInChunk >= chunkLen){
+    glitchStepInChunk = 0;
+    if(glitchRepeatPass===0){
+      glitchRepeatPass = 1; // stutter: replay the same chunk once more
+    } else {
+      glitchRepeatPass = 0;
+      glitchSourcePos = (glitchSourcePos + chunkLen) % glitchMasterN;
+      glitchChunkIdx++;
+      if(glitchChunkIdx >= glitchChunks.length){
+        glitchChunkIdx = 0;
+        // regenerate a fresh chunk layout each lap for continued variety
+        glitchChunks = generateGlitchChunks(glitchMasterN);
+      }
+    }
+  }
+  return idx;
+}
+
+function engageGlitch(){
+  if(glitchActive) return;
+  glitchActive = true;
+  glitchMasterN = Math.max(1, STATE.drums.steps);
+  glitchChunks = generateGlitchChunks(glitchMasterN);
+  glitchChunkIdx=0; glitchStepInChunk=0; glitchRepeatPass=0; glitchSourcePos=0;
+  const btn=document.getElementById('glitch-btn');
+  if(btn) btn.classList.add('active');
+}
+
+function releaseGlitch(){
+  if(!glitchActive) return;
+  glitchActive = false;
+  const btn=document.getElementById('glitch-btn');
+  if(btn) btn.classList.remove('active');
+}
+
+// ═══════════════════════════════════════════════════════
+// GLOBAL 50% — half-speed tape toggle.
+// Halves BPM (which every scheduler/LFO/duck timing in the app already
+// computes live from BPM, so tempo drops everywhere for free) and folds
+// a matching pitch-drop into vinylWobble, which is already threaded
+// through nearly every pitched sound source (kick, tom, bass, lead,
+// synth) — so pitch drops right along with tempo, like a tape machine
+// slowed to half speed. Toggle on/off; a re-press instantly restores
+// normal BPM and pitch.
+// ═══════════════════════════════════════════════════════
+let halfSpeedActive = false;
+let halfSpeedSavedBPM = null;
+let globalPitchMult = 1.0;
+
+function toggleHalfSpeed(){
+  const btn=document.getElementById('halfspeed-btn');
+  if(!halfSpeedActive){
+    halfSpeedActive = true;
+    halfSpeedSavedBPM = BPM;
+    BPM = halfSpeedSavedBPM * 0.5;
+    globalPitchMult = 0.5;
+    if(btn) btn.classList.add('active');
+  } else {
+    halfSpeedActive = false;
+    if(halfSpeedSavedBPM!=null) BPM = halfSpeedSavedBPM;
+    globalPitchMult = 1.0;
+    if(btn) btn.classList.remove('active');
+  }
+  const bpmEl=document.getElementById('topbar-bpm');
+  if(bpmEl) bpmEl.textContent = Math.round(BPM)+' BPM';
+}
+
+// ═══════════════════════════════════════════════════════
+// TEMPO FILTER — sweeps a lowpass across the whole mix closed (or back
+// open) over the duration of one full current bar, synced to tempo and
+// the drums' step count (same "one bar" convention used elsewhere).
+// ═══════════════════════════════════════════════════════
+let tempoFilterActive=false;
+let channelFilterOn={drums:false, bass:false, lead:false, tex:false};
+
+const TEMPO_FILTER_CHANNELS=['drums','bass','lead','tex'];
+
+function sweepChannelFilter(name, targetFreq, targetQ, barSec){
+  const ch=CH[name];
+  if(!ch||!ch.tempoFilter) return;
+  const now=actx.currentTime;
+  ch.tempoFilter.frequency.cancelScheduledValues(now);
+  ch.tempoFilter.Q.cancelScheduledValues(now);
+  ch.tempoFilter.frequency.setValueAtTime(ch.tempoFilter.frequency.value, now);
+  ch.tempoFilter.Q.setValueAtTime(ch.tempoFilter.Q.value, now);
+  ch.tempoFilter.frequency.exponentialRampToValueAtTime(targetFreq, now+barSec);
+  ch.tempoFilter.Q.linearRampToValueAtTime(targetQ, now+barSec);
+}
+
+function engageTempoFilter(){
+  if(!actx) return;
+  const btn=document.getElementById('tempofilter-btn');
+  const stepMs=(60/BPM/4)*1000;
+  const barSec=(STATE.drums.steps*stepMs)/1000*2;
+  TEMPO_FILTER_CHANNELS.forEach(n=>{ sweepChannelFilter(n, 140, 6, barSec); channelFilterOn[n]=true; });
+  tempoFilterActive=true;
+  if(btn) btn.classList.add('active');
+}
+
+function releaseTempoFilter(){
+  if(!actx) return;
+  if(!tempoFilterActive) return; // already open, nothing to release
+  const btn=document.getElementById('tempofilter-btn');
+  const stepMs=(60/BPM/4)*1000;
+  const barSec=(STATE.drums.steps*stepMs)/1000*2;
+  TEMPO_FILTER_CHANNELS.forEach(n=>{ sweepChannelFilter(n, 19000, 0.7, barSec); channelFilterOn[n]=false; });
+  tempoFilterActive=false;
+  if(btn) btn.classList.remove('active');
+}
+
+// Releases just ONE channel's filter back open — used when that
+// specific sound gets cycled, so it plays unfiltered immediately (fast
+// ramp, not the slow multi-bar sweep) while the rest of the mix stays
+// filtered until they're cycled too (or FILTER is pressed to release
+// everything). If that was the last channel still filtered, the FILTER
+// button auto-deactivates since nothing is being filtered anymore.
+function releaseChannelTempoFilter(name){
+  if(!actx||!tempoFilterActive) return;
+  const ch=CH[name];
+  if(!ch||!ch.tempoFilter) return;
+  const now=actx.currentTime;
+  ch.tempoFilter.frequency.cancelScheduledValues(now);
+  ch.tempoFilter.Q.cancelScheduledValues(now);
+  ch.tempoFilter.frequency.setValueAtTime(ch.tempoFilter.frequency.value, now);
+  ch.tempoFilter.Q.setValueAtTime(ch.tempoFilter.Q.value, now);
+  ch.tempoFilter.frequency.exponentialRampToValueAtTime(19000, now+0.12);
+  ch.tempoFilter.Q.linearRampToValueAtTime(0.7, now+0.12);
+  channelFilterOn[name]=false;
+
+  const anyStillFiltered=TEMPO_FILTER_CHANNELS.some(n=>channelFilterOn[n]);
+  if(!anyStillFiltered){
+    tempoFilterActive=false;
+    const btn=document.getElementById('tempofilter-btn');
+    if(btn) btn.classList.remove('active');
+  }
+}
+
+function toggleTempoFilter(){
+  if(tempoFilterActive) releaseTempoFilter(); else engageTempoFilter();
+}
 
 function triggerSync(){
   const btn=document.getElementById('sync-btn');
@@ -1492,6 +1903,28 @@ function checkSyncFire(){
     b.classList.remove('armed'); b.classList.add('fired');
     setTimeout(()=>b.classList.remove('fired'),400);
   } else {
+    // Sync to longest — the loop with the most steps becomes the master
+    // count; shorter loops repeat their own pattern in place to fill up
+    // to that length, then everything starts over together.
+    const targetN=Math.max(STATE.drums.steps, STATE.bass.steps, STATE.lead.steps);
+    ['drums','bass','lead'].forEach(n=>{
+      const st=STATE[n];
+      if(st.steps===targetN){buildStepBar(n);return;}
+      if(n==='drums'){
+        const ext=p=>{ if(!p||!p.length)return new Array(targetN).fill(null);
+          const np=new Array(targetN).fill(null);
+          for(let i=0;i<targetN;i++)np[i]=p[i%p.length]; return np; };
+        st.kick=ext(st.kick); st.snare=ext(st.snare);
+        st.hat=ext(st.hat);   st.tom=ext(st.tom);
+      } else {
+        const op=st.pattern||[];
+        const np=new Array(targetN).fill(null);
+        for(let i=0;i<targetN;i++)np[i]=op[i%op.length];
+        st.pattern=np;
+      }
+      st.steps=targetN;
+      buildStepBar(n);
+    });
     armDrumFill(pickFillType());
     const b=document.getElementById('sync-btn');
     b.classList.remove('armed'); b.classList.add('fired');
@@ -1511,13 +1944,18 @@ function toggleHalftime(name){
 }
 function toggleDrummer(){
   const ds=STATE.drums;
-  ds.drummerIdx = ds.drummerIdx ? 0 : 1;
+  ds.drummerIdx = (ds.drummerIdx + 1) % 3;
   const N=ds.steps;
   if(ds.drummerIdx===1){
     ds.kick =genKickMachine(N,CH.drums);
     ds.tom  =genTomMachine(N,CH.drums);
     ds.hat  =genHatMachine(N,CH.drums);
     ds.snare=genSnareMachine(N);
+  } else if(ds.drummerIdx===2){
+    ds.kick =genKickBreak(N,CH.drums);
+    ds.tom  =genTomBreak(N,CH.drums);
+    ds.hat  =genHatBreak(N,CH.drums);
+    ds.snare=genSnareBreak(N,CH.drums);
   } else {
     ds.kick =genKick(N,CH.drums);
     ds.tom  =genTom(N,CH.drums);
@@ -1527,7 +1965,7 @@ function toggleDrummer(){
   ds.phraseEvent=null; ds._fillKick=null; ds._fillSnare=null; ds._fillHat=null; ds._fillTom=null;
   document.getElementById('voice-drums').textContent=DRUMMER_LABELS[ds.drummerIdx]+' · '+N+' ST';
   const btn=document.getElementById('drummer-toggle-btn');
-  if(btn) btn.classList.toggle('on', ds.drummerIdx===1);
+  if(btn) btn.classList.toggle('on', ds.drummerIdx!==0);
   flashQuad('drums');
 }
 function toggleMute(name){
@@ -1543,9 +1981,8 @@ function toggleMute(name){
     el.classList.add('locked');
     quad.classList.add('muted');
   } else {
-    // Ramp back to base level, accounting for Y position
-    const yVol=(0.15+ch.xyY*0.85);
-    if(actx) ch.level.gain.setTargetAtTime(ch._baseLevel*yVol, now, 0.04);
+    // Ramp back to fixed base level — no longer scaled by Y
+    if(actx) ch.level.gain.setTargetAtTime(ch._baseLevel, now, 0.04);
     el.textContent='LIVE';
     el.classList.remove('locked');
     quad.classList.remove('muted');
@@ -1600,7 +2037,7 @@ function fireKick(t,freq,vel=1){
   // Click transient: very short noise burst for attack definition
   const cb=actx.createBuffer(1,Math.floor(actx.sampleRate*0.008),actx.sampleRate);
   const cd=cb.getChannelData(0);for(let i=0;i<cd.length;i++)cd[i]=(Math.random()*2-1)*Math.exp(-i/(cd.length*0.3));
-  const cs=actx.createBufferSource();cs.buffer=cb;
+  const cs=actx.createBufferSource();cs.buffer=cb;cs.playbackRate.value=globalPitchMult;
   const ce=actx.createGain();ce.gain.setValueAtTime(vel*0.55,t);ce.gain.exponentialRampToValueAtTime(0.001,t+0.014);
   const ch=actx.createBiquadFilter();ch.type='highpass';ch.frequency.value=80;
   cs.connect(ch);ch.connect(ce);ce.connect(CH.drums.preGain);cs.start(t);cs.stop(t+0.02);
@@ -1625,7 +2062,7 @@ function fireTom(t,freq,vel=1){
 function fireHat(t,vel=1){
   const ds=STATE.drums;
   // Slightly varied filtering per hit — hats on old records are never identical
-  const src=actx.createBufferSource();src.buffer=hatBuf;
+  const src=actx.createBufferSource();src.buffer=hatBuf;src.playbackRate.value=globalPitchMult;
   const hp=actx.createBiquadFilter();hp.type='highpass';
   hp.frequency.value=6000+Math.random()*2500; // random cutoff variation
   hp.Q.value=0.6+Math.random()*0.6;
@@ -1654,7 +2091,7 @@ function fireSnare(t,vel=1){
   bodyEnv.gain.exponentialRampToValueAtTime(0.001,t+dec*0.55);
   o1.start(t);o1.stop(t+dec+0.04);o2.start(t);o2.stop(t+dec+0.04);
   // Noise snap: wide bandpass — papery crunch of a real snare hit
-  const ns=actx.createBufferSource();ns.buffer=snareBuf;
+  const ns=actx.createBufferSource();ns.buffer=snareBuf;ns.playbackRate.value=globalPitchMult;
   const nbp=actx.createBiquadFilter();nbp.type='bandpass';nbp.frequency.value=3200+Math.random()*800;nbp.Q.value=0.65;
   const nbp2=actx.createBiquadFilter();nbp2.type='peaking';nbp2.frequency.value=6500;nbp2.Q.value=1.5;nbp2.gain.value=4;
   const noiseEnv=actx.createGain();
@@ -1691,7 +2128,7 @@ function fireKick2(t,freq,vel=1){
   // Skin-slap transient — warm filtered noise burst, not a synth click
   const cb=actx.createBuffer(1,Math.floor(actx.sampleRate*0.02),actx.sampleRate);
   const cd=cb.getChannelData(0);for(let i=0;i<cd.length;i++)cd[i]=(Math.random()*2-1)*Math.exp(-i/(cd.length*0.35));
-  const cs=actx.createBufferSource();cs.buffer=cb;
+  const cs=actx.createBufferSource();cs.buffer=cb;cs.playbackRate.value=globalPitchMult;
   const cbp=actx.createBiquadFilter();cbp.type='bandpass';cbp.frequency.value=350;cbp.Q.value=0.9;
   const ce=actx.createGain();ce.gain.setValueAtTime(vel*0.55,t);ce.gain.exponentialRampToValueAtTime(0.001,t+0.05);
   cs.connect(cbp);cbp.connect(ce);ce.connect(CH.drums.preGain);cs.start(t);cs.stop(t+0.06);
@@ -1713,7 +2150,7 @@ function fireTom2(t,freq,vel=1){
   // Slap noise transient — the percussive "crack" of fingers on skin
   const nb=actx.createBuffer(1,Math.floor(actx.sampleRate*0.012),actx.sampleRate);
   const nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=(Math.random()*2-1)*Math.exp(-i/(nd.length*0.3));
-  const ns=actx.createBufferSource();ns.buffer=nb;
+  const ns=actx.createBufferSource();ns.buffer=nb;ns.playbackRate.value=globalPitchMult;
   const nbp=actx.createBiquadFilter();nbp.type='bandpass';nbp.frequency.value=900;nbp.Q.value=1.2;
   const ne=actx.createGain();ne.gain.setValueAtTime(vel*0.4,t);ne.gain.exponentialRampToValueAtTime(0.001,t+0.02);
   ns.connect(nbp);nbp.connect(ne);ne.connect(CH.drums.preGain);ns.start(t);ns.stop(t+0.03);
@@ -1723,7 +2160,7 @@ function fireHat2(t,vel=1){
   const ds=STATE.drums;
   // Shaker — filtered noise swish, warmer and less metallic than a hi-hat
   const dec=ds.hatDecay*1.4*(0.20+vel*0.80)*(0.7+Math.random()*0.6);
-  const src=actx.createBufferSource();src.buffer=hatBuf;
+  const src=actx.createBufferSource();src.buffer=hatBuf;src.playbackRate.value=globalPitchMult;
   const bp=actx.createBiquadFilter();bp.type='bandpass';
   bp.frequency.value=4500+Math.random()*2500;
   bp.Q.value=0.9+Math.random()*0.5;
@@ -1753,11 +2190,92 @@ function fireSnare2(t,vel=1){
   // Skin-slap transient, a touch brighter than the kick's for differentiation
   const cb=actx.createBuffer(1,Math.floor(actx.sampleRate*0.016),actx.sampleRate);
   const cd=cb.getChannelData(0);for(let i=0;i<cd.length;i++)cd[i]=(Math.random()*2-1)*Math.exp(-i/(cd.length*0.3));
-  const cs=actx.createBufferSource();cs.buffer=cb;
+  const cs=actx.createBufferSource();cs.buffer=cb;cs.playbackRate.value=globalPitchMult;
   const cbp=actx.createBiquadFilter();cbp.type='bandpass';cbp.frequency.value=500;cbp.Q.value=1.0;
   const ce=actx.createGain();ce.gain.setValueAtTime(vel*0.5,t);ce.gain.exponentialRampToValueAtTime(0.001,t+0.04);
   cs.connect(cbp);cbp.connect(ce);ce.connect(CH.drums.preGain);cs.start(t);cs.stop(t+0.05);
   triggerSynthDuck(t, vel, 0.55);
+}
+
+// ═══════════════════════════════════════════════════════
+// THIRD DRUMMER'S KIT — "THE BREAKS"
+// Sampled-sounding acoustic break: punchy compressed kick, bright
+// cracky snare, tight closed hat, woody rimshot. Tuned for that
+// classic chopped-loop character rather than the original kit's
+// looser vinyl feel or the ensemble's hand-drum warmth.
+// ═══════════════════════════════════════════════════════
+
+function fireKick3(t,freq,vel=1){
+  const ds=STATE.drums;
+  const w=vinylWobble;
+  // Tight, punchy body — shorter and snappier than the original kit's boom
+  const osc=actx.createOscillator(),env=actx.createGain();
+  osc.type='sine';
+  osc.frequency.setValueAtTime(freq*w*3.0,t);
+  osc.frequency.exponentialRampToValueAtTime(Math.max(35,freq*w*0.75),t+0.035+vel*0.015);
+  const dec=ds.kickDecay*0.65*(0.3+vel*0.7);
+  env.gain.setValueAtTime(0.001,t);env.gain.linearRampToValueAtTime(vel*1.1,t+0.002);
+  env.gain.exponentialRampToValueAtTime(0.001,t+dec);
+  osc.connect(env);env.connect(CH.drums.preGain);
+  osc.start(t);osc.stop(t+dec+0.04);
+  // Bright, sharp transient click — reads as a "sampled" kick attack
+  const cb=actx.createBuffer(1,Math.floor(actx.sampleRate*0.01),actx.sampleRate);
+  const cd=cb.getChannelData(0);for(let i=0;i<cd.length;i++)cd[i]=(Math.random()*2-1)*Math.exp(-i/(cd.length*0.25));
+  const cs=actx.createBufferSource();cs.buffer=cb;cs.playbackRate.value=globalPitchMult;
+  const ce=actx.createGain();ce.gain.setValueAtTime(vel*0.6,t);ce.gain.exponentialRampToValueAtTime(0.001,t+0.012);
+  const chp=actx.createBiquadFilter();chp.type='highpass';chp.frequency.value=150;
+  cs.connect(chp);chp.connect(ce);ce.connect(CH.drums.preGain);cs.start(t);cs.stop(t+0.02);
+  triggerSynthDuck(t, vel, 0.75);
+}
+
+function fireTom3(t,freq,vel=1){
+  // Rimshot — woody click used for breakbeat syncopation accents
+  const dec=0.06*(0.3+vel*0.7);
+  const o=actx.createOscillator();o.type='triangle';
+  o.frequency.value=Math.max(300,Math.min(700,freq*3*vinylWobble));
+  const bp=actx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1200;bp.Q.value=3;
+  const env=actx.createGain();
+  env.gain.setValueAtTime(vel*0.55,t);env.gain.exponentialRampToValueAtTime(0.001,t+dec);
+  o.connect(bp);bp.connect(env);env.connect(CH.drums.preGain);
+  o.start(t);o.stop(t+dec+0.02);
+}
+
+function fireHat3(t,vel=1){
+  const ds=STATE.drums;
+  // Tight, crisp closed hat — shorter and brighter than the original kit's
+  const src=actx.createBufferSource();src.buffer=hatBuf;src.playbackRate.value=globalPitchMult;
+  const hp=actx.createBiquadFilter();hp.type='highpass';hp.frequency.value=8000+Math.random()*2000;hp.Q.value=0.7;
+  const env=actx.createGain();
+  const dec=ds.hatDecay*0.7*(0.15+vel*0.85);
+  env.gain.setValueAtTime(vel*0.5,t);env.gain.exponentialRampToValueAtTime(0.001,t+dec);
+  src.connect(hp);hp.connect(env);env.connect(CH.drums.preGain);
+  src.start(t);src.stop(t+dec+0.012);
+}
+
+function fireSnare3(t,vel=1){
+  const ds=STATE.drums;
+  const dec=ds.snareDecay*0.8*(0.25+vel*0.75);
+  // Cracky tonal body — the acoustic "pop" under the noise
+  const bodyEnv=actx.createGain();bodyEnv.connect(CH.drums.preGain);
+  const o1=actx.createOscillator();o1.type='triangle';
+  o1.frequency.setValueAtTime(210+Math.random()*30,t);
+  o1.frequency.exponentialRampToValueAtTime(100+Math.random()*20,t+0.03);
+  o1.connect(bodyEnv);
+  bodyEnv.gain.setValueAtTime(0,t);
+  bodyEnv.gain.linearRampToValueAtTime(vel*0.6,t+0.001);
+  bodyEnv.gain.exponentialRampToValueAtTime(0.001,t+dec*0.45);
+  o1.start(t);o1.stop(t+dec+0.03);
+  // Bright noise crack — sampled-snare character, brighter than the original kit
+  const ns=actx.createBufferSource();ns.buffer=snareBuf;ns.playbackRate.value=globalPitchMult;
+  const nbp=actx.createBiquadFilter();nbp.type='bandpass';nbp.frequency.value=4200+Math.random()*1000;nbp.Q.value=0.8;
+  const nbp2=actx.createBiquadFilter();nbp2.type='peaking';nbp2.frequency.value=7000;nbp2.Q.value=1.3;nbp2.gain.value=5;
+  const noiseEnv=actx.createGain();
+  noiseEnv.gain.setValueAtTime(vel*1.0,t);
+  noiseEnv.gain.exponentialRampToValueAtTime(vel*0.2,t+0.012);
+  noiseEnv.gain.exponentialRampToValueAtTime(0.001,t+dec);
+  ns.connect(nbp);nbp.connect(nbp2);nbp2.connect(noiseEnv);noiseEnv.connect(CH.drums.preGain);
+  ns.start(t);ns.stop(t+dec+0.04);
+  triggerSynthDuck(t, vel, 0.45);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1937,7 +2455,7 @@ function playLead(t,freq){
     // Breath noise
     const nb=actx.createBuffer(1,Math.floor(actx.sampleRate*dec),actx.sampleRate);
     const nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
-    const ns=actx.createBufferSource();ns.buffer=nb;
+    const ns=actx.createBufferSource();ns.buffer=nb;ns.playbackRate.value=globalPitchMult;
     const nbp=actx.createBiquadFilter();nbp.type='bandpass';nbp.frequency.value=freq*2;nbp.Q.value=3;
     const ng=actx.createGain();ng.gain.value=0.06;
     ns.connect(nbp);nbp.connect(ng);ng.connect(env);
@@ -2011,8 +2529,17 @@ function playLead(t,freq){
 // Build the note pool for the synth from current scale, spanning 2 octaves
 // Returns array of Hz values ordered low→high
 function getSynthNotePool(){
-  // Use mid octave — sits between bass and lead
-  const pool = buildPool(currentRootHz, 1, currentIntervals);
+  // Note count matches the glass grid's row count (drums' step count) so
+  // every row gets exactly one note — cycles through the scale across
+  // as many octaves as needed to fill that many notes.
+  const N = STATE.drums.steps || currentIntervals.length;
+  const baseOctave = 1; // mid octave — sits between bass and lead
+  const pool = [];
+  for(let i=0;i<N;i++){
+    const octaveStep = Math.floor(i/currentIntervals.length);
+    const degree = currentIntervals[i % currentIntervals.length];
+    pool.push(semiShift(currentRootHz*Math.pow(2,baseOctave+octaveStep), degree));
+  }
   return pool.sort((a,b)=>a-b);
 }
 
@@ -2326,22 +2853,32 @@ function scheduleStep(){
     const t=nextNoteTime;
     // Advance vinyl wobble LFO — slow warp on each scheduled step
     vinylWobblePhase+=WOBBLE_RATE*(60/(BPM*4))*Math.PI*2;
-    vinylWobble=1.0+Math.sin(vinylWobblePhase)*WOBBLE_DEPTH;
+    vinylWobble=globalPitchMult*(1.0+Math.sin(vinylWobblePhase)*WOBBLE_DEPTH);
+
+    // GLOBAL GLITCH — one shared step index for this tick, used by
+    // drums/bass/lead in place of their own counters while held
+    const glitchStepIndex = glitchActive ? advanceGlitchClock() : null;
 
     // DRUMS — halftime: only fire + advance on even ticks
     const ds=STATE.drums; const N=ds.steps;
     {
-      ds.halftimeTick = ds.halftime ? (ds.halftimeTick+1)%2 : 0;
-      const drumsFire = !ds.halftime || ds.halftimeTick===0;
-      const s=ds.step;
+      let s, drumsFire;
+      if(glitchActive){
+        s = glitchStepIndex % N;
+        drumsFire = true;
+      } else {
+        ds.halftimeTick = ds.halftime ? (ds.halftimeTick+1)%2 : 0;
+        drumsFire = !ds.halftime || ds.halftimeTick===0;
+        s = ds.step;
+      }
       const dKick  = ds.phraseEvent ? ds._fillKick  : ds.kick;
       const dSnare = ds.phraseEvent ? ds._fillSnare : ds.snare;
       const dHat   = ds.phraseEvent ? ds._fillHat   : ds.hat;
       const dTom   = ds.phraseEvent ? ds._fillTom   : ds.tom;
-      const fKick  = ds.drummerIdx===1 ? fireKick2  : fireKick;
-      const fTom   = ds.drummerIdx===1 ? fireTom2   : fireTom;
-      const fSnare = ds.drummerIdx===1 ? fireSnare2 : fireSnare;
-      const fHat   = ds.drummerIdx===1 ? fireHat2   : fireHat;
+      const fKick  = ds.drummerIdx===1 ? fireKick2  : ds.drummerIdx===2 ? fireKick3  : fireKick;
+      const fTom   = ds.drummerIdx===1 ? fireTom2   : ds.drummerIdx===2 ? fireTom3   : fireTom;
+      const fSnare = ds.drummerIdx===1 ? fireSnare2 : ds.drummerIdx===2 ? fireSnare3 : fireSnare;
+      const fHat   = ds.drummerIdx===1 ? fireHat2   : ds.drummerIdx===2 ? fireHat3   : fireHat;
       if(drumsFire){
         fireSlot(dKick[s],  (tt,v)=>fKick(tt,ds.kickFreq,v), t, sd);
         fireSlot(dTom[s],   (tt,v)=>fTom(tt,ds.tomFreq,v), t, sd);
@@ -2349,9 +2886,11 @@ function scheduleStep(){
         if(!dHat[s]){if(Math.random()<0.05*0.15)fHat(t+Math.random()*sd*0.3,0.06+Math.random()*0.07);}
         else dHat[s].forEach(ev=>{if(!ev)return;const ig=ev.role==='ghost';if(ig&&Math.random()>0.65)return;if(Math.random()<0.07*(ig?1.1:0.3))return;fHat(t+ev.offset*sd,ev.vel);});
         tickStepBar('drums', s);
-        ds.step++; if(ds.step>=N){
-          ds.step=0; onDrumsLoopWrap();
-          if(syncArmed){ syncReady.drums=true; checkSyncFire(); }
+        if(!glitchActive){
+          ds.step++; if(ds.step>=N){
+            ds.step=0; onDrumsLoopWrap();
+            if(syncArmed){ syncReady.drums=true; checkSyncFire(); }
+          }
         }
       }
     }
@@ -2359,18 +2898,26 @@ function scheduleStep(){
     // BASS — halftime: hold each note for two ticks
     const bs=STATE.bass; const BN=bs.steps;
     {
-      bs.halftimeTick = bs.halftime ? (bs.halftimeTick+1)%2 : 0;
-      const bassFire = !bs.halftime || bs.halftimeTick===0;
-      const bs_s=bs.step;
+      let bs_s, bassFire;
+      if(glitchActive){
+        bs_s = glitchStepIndex % BN;
+        bassFire = true;
+      } else {
+        bs.halftimeTick = bs.halftime ? (bs.halftimeTick+1)%2 : 0;
+        bassFire = !bs.halftime || bs.halftimeTick===0;
+        bs_s = bs.step;
+      }
       if(bassFire){
         const bFreq = bs.inResolve && bs.resolvePattern[bs_s]!=null
                       ? bs.resolvePattern[bs_s]
                       : bs.pattern[bs_s];
         if(bFreq!=null) playBass(t, bFreq);
         tickStepBar('bass', bs_s);
-        bs.step++; if(bs.step>=BN){
-          bs.step=0; onBassLoopWrap();
-          if(syncArmed){ syncReady.bass=true; checkSyncFire(); }
+        if(!glitchActive){
+          bs.step++; if(bs.step>=BN){
+            bs.step=0; onBassLoopWrap();
+            if(syncArmed){ syncReady.bass=true; checkSyncFire(); }
+          }
         }
       }
     }
@@ -2378,18 +2925,26 @@ function scheduleStep(){
     // LEAD — halftime: hold each note for two ticks
     const ls=STATE.lead; const LN=ls.steps;
     {
-      ls.halftimeTick = ls.halftime ? (ls.halftimeTick+1)%2 : 0;
-      const leadFire = !ls.halftime || ls.halftimeTick===0;
-      const ls_s=ls.step;
+      let ls_s, leadFire;
+      if(glitchActive){
+        ls_s = glitchStepIndex % LN;
+        leadFire = true;
+      } else {
+        ls.halftimeTick = ls.halftime ? (ls.halftimeTick+1)%2 : 0;
+        leadFire = !ls.halftime || ls.halftimeTick===0;
+        ls_s = ls.step;
+      }
       if(leadFire){
         const lFreq = ls.inResolve && ls.resolvePattern[ls_s]!=null
                       ? ls.resolvePattern[ls_s]
                       : ls.pattern[ls_s];
         if(lFreq!=null) playLead(t, lFreq);
         tickStepBar('lead', ls_s);
-        ls.step++; if(ls.step>=LN){
-          ls.step=0; onLeadLoopWrap();
-          if(syncArmed){ syncReady.lead=true; checkSyncFire(); }
+        if(!glitchActive){
+          ls.step++; if(ls.step>=LN){
+            ls.step=0; onLeadLoopWrap();
+            if(syncArmed){ syncReady.lead=true; checkSyncFire(); }
+          }
         }
       }
     }
@@ -2472,6 +3027,34 @@ function getCanvasCtx(name){
   return {c, ctx:c._ctx};
 }
 
+// Offscreen buffer per quad — the kaleidoscope content is drawn here
+// crisp, then composited onto the visible canvas with a single blur
+// pass, so the whole image softens as one piece (a real frosted-behind-
+// glass look) instead of blurring each individual stroke.
+function getOffscreenCtx(name,W,H){
+  let off=VIZ[name]._offCanvas;
+  if(!off){
+    off=document.createElement('canvas');
+    VIZ[name]._offCanvas=off;
+  }
+  if(off.width!==W||off.height!==H){ off.width=W; off.height=H; }
+  return {off, offCtx:off.getContext('2d')};
+}
+
+// Sampling canvas — scaling the full-res content down onto this at a
+// resolution finer than the glass grid (several sub-pixels per block)
+// makes the browser's own resampling produce genuine blocky pixel-art
+// detail of the pattern, which each glass pane can then show a chunk of.
+function getSampleCtx(name,size){
+  let sc=VIZ[name]._sampleCanvas;
+  if(!sc){
+    sc=document.createElement('canvas');
+    VIZ[name]._sampleCanvas=sc;
+  }
+  if(sc.width!==size||sc.height!==size){ sc.width=size; sc.height=size; }
+  return {sc, sampleCtx:sc.getContext('2d')};
+}
+
 function drawQuad(name){
   const {c,ctx}=getCanvasCtx(name);
   const W=c.width, H=c.height;
@@ -2482,7 +3065,10 @@ function drawQuad(name){
   ctx.fillStyle='rgba(6,6,8,0.30)';
   ctx.fillRect(0,0,W,H);
 
-  // ── SYNTH PAD: draw note zones as horizontal bands
+  // ── SYNTH PAD: draw note zone background bands now; the note-name/
+  // frequency text itself is drawn later, after the glass grid, so it
+  // stays legible on top instead of getting buried under the tiles.
+  let drawSynthLabels=null;
   if(name==='tex'){
     const pool=getSynthNotePool();
     const zoneH=H/pool.length;
@@ -2494,72 +3080,355 @@ function drawQuad(name){
       const isActive=isPlaying && i===activeZone;
       // Zone background
       ctx.globalAlpha=isActive?0.22:0.04;
-      ctx.fillStyle='#ffcc44';
+      ctx.fillStyle='#b866ff';
       ctx.fillRect(0,y,W,zoneH-1);
       // Zone separator line
       ctx.globalAlpha=0.08;
-      ctx.fillStyle='#ffcc44';
+      ctx.fillStyle='#b866ff';
       ctx.fillRect(0,y+zoneH-1,W,1);
-      // Note name label
-      const midi=Math.round(12*Math.log2(freq/440)+69);
-      const noteName=noteNames[((midi%12)+12)%12];
-      ctx.globalAlpha=isActive?0.90:0.20;
-      ctx.fillStyle='#ffcc44';
-      ctx.font=`${Math.max(10,Math.min(14,zoneH*0.55))}px 'Share Tech Mono',monospace`;
-      ctx.fillText(noteName, 10, y+zoneH*0.65);
-      // Frequency on the right
-      ctx.globalAlpha=isActive?0.60:0.10;
-      const freqStr=Math.round(freq)+'Hz';
-      ctx.fillText(freqStr, W-50, y+zoneH*0.65);
     });
     ctx.globalAlpha=1;
+
+    drawSynthLabels=function(){
+      pool.forEach((freq,i)=>{
+        const y=H-(i+1)*zoneH;
+        const isActive=isPlaying && i===activeZone;
+        const midi=Math.round(12*Math.log2(freq/440)+69);
+        const noteName=noteNames[((midi%12)+12)%12];
+        // Note name label — dark backing so it reads over any tile color
+        ctx.font=`${Math.max(10,Math.min(14,zoneH*0.55))}px 'Share Tech Mono',monospace`;
+        ctx.globalAlpha=isActive?1:0.55;
+        ctx.fillStyle='rgba(0,0,0,0.55)';
+        ctx.fillText(noteName, 10, y+zoneH*0.65);
+        ctx.fillStyle=isActive?'#fff':'#b866ff';
+        ctx.fillText(noteName, 9, y+zoneH*0.65-1);
+        // Frequency on the right
+        const freqStr=Math.round(freq)+'Hz';
+        ctx.globalAlpha=isActive?0.85:0.45;
+        ctx.fillStyle='rgba(0,0,0,0.55)';
+        ctx.fillText(freqStr, W-50, y+zoneH*0.65);
+        ctx.fillStyle=isActive?'#fff':'#b866ff';
+        ctx.fillText(freqStr, W-51, y+zoneH*0.65-1);
+      });
+      ctx.globalAlpha=1;
+    };
   }
 
-  if(trail.length<2) return;
-  const folds=STATE[name].steps||5;
+  // Glass-tile kaleidoscope grid — same visualizer for all four pads.
+  // The synth pad doesn't have its own step count, so it matches drums'
+  // grid size for visual consistency across the whole instrument.
+  const N=name==='tex' ? STATE.drums.steps : (STATE[name].steps||5);
+  const folds=N;
   const cx=W/2,cy=H/2;
+  const cellW=W/N, cellH=H/N;
 
   // Build palette from channel hue
   viz.hue=(viz.hue+0.20)%360;
   const palette=[];
   for(let i=0;i<6;i++) palette.push(hslToHex((viz.hue+i*22)%360,90,30+i*8));
 
-  for(let i=1;i<trail.length;i++){
-    const ratio=i/trail.length;
-    const px=trail[i-1].x*W, py=(1-trail[i-1].y)*H;
-    const nx=trail[i].x*W,   ny=(1-trail[i].y)*H;
-    const col=palette[Math.floor(ratio*(palette.length-1))];
-    const alpha=ratio*0.55+0.05;
-
+  // 1) THE CONTENT — the actual moving kaleidoscope, drawn crisp into
+  // a full-res offscreen buffer.
+  const {off,offCtx}=getOffscreenCtx(name,W,H);
+  offCtx.clearRect(0,0,W,H);
+  if(trail.length>=2){
+    for(let i=1;i<trail.length;i++){
+      const ratio=i/trail.length;
+      const px=trail[i-1].x*W, py=(1-trail[i-1].y)*H;
+      const nx=trail[i].x*W,   ny=(1-trail[i].y)*H;
+      const col=palette[Math.floor(ratio*(palette.length-1))];
+      const alpha=ratio*0.8+0.15;
+      for(let f=0;f<folds;f++){
+        const ang=f*(Math.PI*2/folds);
+        const cos=Math.cos(ang),sin=Math.sin(ang);
+        const dx0=px-cx,dy0=py-cy,dx1=nx-cx,dy1=ny-cy;
+        const rx0=cx+dx0*cos-dy0*sin, ry0=cy+dx0*sin+dy0*cos;
+        const rx1=cx+dx1*cos-dy1*sin, ry1=cy+dx1*sin+dy1*cos;
+        offCtx.beginPath();offCtx.moveTo(rx0,ry0);offCtx.lineTo(rx1,ry1);
+        offCtx.strokeStyle=col;offCtx.globalAlpha=alpha;offCtx.lineWidth=3.2;offCtx.stroke();
+      }
+    }
+    offCtx.globalAlpha=1;
+    // Head glow — part of the content layer
+    const chead=trail[trail.length-1];
+    const chx=chead.x*W, chy=(1-chead.y)*H;
+    const chdx=chx-cx, chdy=chy-cy;
     for(let f=0;f<folds;f++){
       const ang=f*(Math.PI*2/folds);
       const cos=Math.cos(ang),sin=Math.sin(ang);
-      const dx0=px-cx,dy0=py-cy,dx1=nx-cx,dy1=ny-cy;
-      const rx0=cx+dx0*cos-dy0*sin, ry0=cy+dx0*sin+dy0*cos;
-      const rx1=cx+dx1*cos-dy1*sin, ry1=cy+dx1*sin+dy1*cos;
-      ctx.beginPath();ctx.moveTo(rx0,ry0);ctx.lineTo(rx1,ry1);
-      ctx.strokeStyle=col;ctx.globalAlpha=alpha;ctx.lineWidth=1.5;ctx.stroke();
+      const rx=cx+chdx*cos-chdy*sin, ry=cy+chdx*sin+chdy*cos;
+      offCtx.beginPath();offCtx.arc(rx,ry,5,0,Math.PI*2);
+      offCtx.fillStyle='#fff';offCtx.globalAlpha=0.9;offCtx.fill();
+      offCtx.beginPath();offCtx.arc(rx,ry,13,0,Math.PI*2);
+      offCtx.fillStyle=palette[palette.length-1];offCtx.globalAlpha=0.4;offCtx.fill();
+    }
+    offCtx.globalAlpha=1;
+  }
+
+  // 1.5) PIXELATE — sample the full-res content at SEVERAL sub-pixels
+  // per glass block (not just one flat color each), so every pane shows
+  // its own small chunk of genuine blocky pixel-art detail from the
+  // mirrored pattern, rather than a single averaged tile of color.
+  const SUBPIX=5; // sub-pixels per block edge
+  const sampleSize=N*SUBPIX;
+  const {sc,sampleCtx}=getSampleCtx(name,sampleSize);
+  sampleCtx.clearRect(0,0,sampleSize,sampleSize);
+  sampleCtx.imageSmoothingEnabled=true; // average when downsampling from full-res
+  sampleCtx.drawImage(off,0,0,W,H,0,0,sampleSize,sampleSize);
+
+  // Draw that pixelated image back across the whole pad, scaled up with
+  // smoothing OFF so the blocky detail stays crisp and visible
+  ctx.fillStyle='#0a0a0c';
+  ctx.fillRect(0,0,W,H);
+  ctx.imageSmoothingEnabled=false;
+  ctx.globalAlpha=0.92;
+  ctx.drawImage(sc,0,0,sampleSize,sampleSize,0,0,W,H);
+  ctx.globalAlpha=1;
+  ctx.imageSmoothingEnabled=true;
+
+  // Average each block's sub-pixels into one glow color/intensity —
+  // this is what makes each pane actually light up (not just show
+  // static detail), brighter wherever more pattern activity sits
+  // behind it, on top of the crisp pixel-art detail drawn above.
+  const finePixels=sampleCtx.getImageData(0,0,sampleSize,sampleSize).data;
+  const blockGlow=new Array(N*N);
+  for(let row=0;row<N;row++){
+    for(let col=0;col<N;col++){
+      let r=0,g=0,b=0,a=0,count=0;
+      for(let sy=0;sy<SUBPIX;sy++){
+        for(let sx=0;sx<SUBPIX;sx++){
+          const px=col*SUBPIX+sx, py=row*SUBPIX+sy;
+          const pi=(py*sampleSize+px)*4;
+          r+=finePixels[pi]; g+=finePixels[pi+1]; b+=finePixels[pi+2]; a+=finePixels[pi+3];
+          count++;
+        }
+      }
+      blockGlow[row*N+col]={r:r/count,g:g/count,b:b/count,a:(a/count)/255};
     }
   }
-  ctx.globalAlpha=1;
 
-  // Head dot
-  const head=trail[trail.length-1];
-  const hx=head.x*W, hy=(1-head.y)*H;
-  const hdx=hx-cx, hdy=hy-cy;
-  for(let f=0;f<folds;f++){
-    const ang=f*(Math.PI*2/folds);
-    const cos=Math.cos(ang),sin=Math.sin(ang);
-    const rx=cx+hdx*cos-hdy*sin, ry=cy+hdx*sin+hdy*cos;
-    ctx.beginPath();ctx.arc(rx,ry,3,0,Math.PI*2);
-    ctx.fillStyle='#fff';ctx.globalAlpha=0.90;ctx.fill();
-    ctx.beginPath();ctx.arc(rx,ry,7,0,Math.PI*2);
-    ctx.fillStyle=palette[palette.length-1];ctx.globalAlpha=0.25;ctx.fill();
+  // 2) THE GLASS — a grid of panes over that pixel-art content: each
+  // one gets a cast shadow, an additive glow lit by its own averaged
+  // content, a gloss highlight, inner shadow and bevel so the blocky
+  // pattern underneath reads as seen through — and lighting up — glass.
+  for(let row=0;row<N;row++){
+    for(let col=0;col<N;col++){
+      const x=col*cellW, y=row*cellH;
+      const gx=x+1, gy=y+1, gw=Math.max(1,cellW-2), gh=Math.max(1,cellH-2);
+
+      const glow=blockGlow[row*N+col];
+      const vis=Math.min(1, glow.a*2.2);
+
+      // Cast shadow — pushes the pane visually forward; fainter on quiet panes
+      ctx.save();
+      ctx.shadowColor='rgba(0,0,0,0.55)';
+      ctx.shadowBlur=Math.max(2,Math.min(cellW,cellH)*0.18);
+      ctx.shadowOffsetX=1;
+      ctx.shadowOffsetY=1.5;
+      ctx.fillStyle=`rgba(255,255,255,${0.015+vis*0.03})`;
+      ctx.fillRect(gx,gy,gw,gh);
+      ctx.restore();
+
+      // LIGHT UP — additive glow using this pane's own averaged content.
+      // 'lighter' compositing makes it brighten like actual backlight
+      // rather than just tinting the pixel-art detail underneath.
+      if(glow.a>0.03){
+        ctx.save();
+        ctx.globalCompositeOperation='lighter';
+        ctx.globalAlpha=Math.min(1,glow.a*1.9);
+        ctx.fillStyle=`rgb(${glow.r|0},${glow.g|0},${glow.b|0})`;
+        ctx.fillRect(gx,gy,gw,gh);
+        ctx.globalAlpha=Math.min(0.85,glow.a*1.1);
+        ctx.shadowColor=`rgb(${glow.r|0},${glow.g|0},${glow.b|0})`;
+        ctx.shadowBlur=Math.max(4,Math.min(cellW,cellH)*0.55);
+        ctx.fillRect(gx,gy,gw,gh);
+        ctx.globalAlpha=Math.min(0.6,glow.a*0.9);
+        ctx.fillRect(gx,gy,gw,gh); // second pass — punches up the brightest panes further
+        ctx.restore();
+      }
+
+      // Frosted tint — scaled down on quiet panes so they recede
+      ctx.fillStyle=`rgba(255,255,255,${0.015+vis*0.03})`;
+      ctx.fillRect(gx,gy,gw,gh);
+
+      // Soft gloss highlight near the top-left of each pane — dimmer
+      // when the pane is quiet, so inactive tiles look flatter/less present
+      const gloss=ctx.createRadialGradient(gx+gw*0.32,gy+gh*0.28,0,gx+gw*0.32,gy+gh*0.28,Math.max(gw,gh)*0.95);
+      gloss.addColorStop(0,`rgba(255,255,255,${0.05+vis*0.14})`);
+      gloss.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=gloss;
+      ctx.fillRect(gx,gy,gw,gh);
+
+      // Inner shadow at the bottom-right — sells pane thickness/depth
+      const inner=ctx.createRadialGradient(gx+gw*0.75,gy+gh*0.78,0,gx+gw*0.75,gy+gh*0.78,Math.max(gw,gh)*0.9);
+      inner.addColorStop(0,'rgba(0,0,0,0.20)');
+      inner.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=inner;
+      ctx.fillRect(gx,gy,gw,gh);
+
+      // Bevel: light top/left edge, dark bottom/right edge — faint on
+      // quiet panes, crisp and defined on active ones
+      ctx.strokeStyle=`rgba(255,255,255,${0.06+vis*0.20})`;
+      ctx.lineWidth=1.4;
+      ctx.beginPath();
+      ctx.moveTo(gx,gy+gh);ctx.lineTo(gx,gy);ctx.lineTo(gx+gw,gy);
+      ctx.stroke();
+      ctx.strokeStyle=`rgba(0,0,0,${0.25+vis*0.40})`;
+      ctx.beginPath();
+      ctx.moveTo(gx+gw,gy);ctx.lineTo(gx+gw,gy+gh);ctx.lineTo(gx,gy+gh);
+      ctx.stroke();
+    }
   }
-  ctx.globalAlpha=1;
+
+  // 3) Diagonal glass sheen across the whole pane, on top of everything
+  const sheen=ctx.createLinearGradient(0,0,W,H);
+  sheen.addColorStop(0,'rgba(255,255,255,0.05)');
+  sheen.addColorStop(0.42,'rgba(255,255,255,0)');
+  sheen.addColorStop(0.52,'rgba(255,255,255,0.04)');
+  sheen.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=sheen;
+  ctx.fillRect(0,0,W,H);
+
+  // Synth note labels — drawn last so they stay readable over the grid
+  if(drawSynthLabels) drawSynthLabels();
 }
 
 let rafId=null;
+// ═══════════════════════════════════════════════════════
+// GHOST NODE — occasionally, a glowing point wanders from one XY pad
+// to another, crossing the screen between quads, and "joins" the
+// destination's kaleidoscope trail on arrival. Purely a visual
+// connective flourish — it never touches a channel's actual XY/audio
+// parameters, just adds a point to their trail so the glass grid
+// picks up a little spark where it lands.
+// ═══════════════════════════════════════════════════════
+const QUAD_GHOST_COLOR = {drums:'#ff2244', bass:'#ff6600', lead:'#00e5ff', tex:'#b866ff'};
+let ghostNode=null;
+let ghostTimer=null;
+let ghostCtx=null;
+
+function quadRect(name){
+  return document.getElementById('q-'+name).getBoundingClientRect();
+}
+
+function scheduleNextGhost(){
+  if(ghostTimer) clearTimeout(ghostTimer);
+  const delay=3000+Math.random()*6000; // roughly every 3-9s
+  ghostTimer=setTimeout(spawnGhostNode, delay);
+}
+
+function spawnGhostNode(){
+  const names=['drums','bass','lead','tex'];
+  const fromName=pick(names);
+  let toName=pick(names);
+  while(toName===fromName) toName=pick(names);
+  const fromRect=quadRect(fromName), toRect=quadRect(toName);
+  if(fromRect.width<10||toRect.width<10){ scheduleNextGhost(); return; } // not laid out yet
+  const fromN = fromName==='tex' ? (STATE.drums.steps||5) : (STATE[fromName].steps||5);
+  const SUBPIX_MATCH=5; // must match SUBPIX used in the glass grid renderer
+  const cellSize = Math.min(fromRect.width/fromN, fromRect.height/fromN) / SUBPIX_MATCH;
+  ghostNode={
+    sx:fromRect.left+fromRect.width*(0.2+Math.random()*0.6),
+    sy:fromRect.top+fromRect.height*(0.2+Math.random()*0.6),
+    ex:toRect.left+toRect.width*(0.2+Math.random()*0.6),
+    ey:toRect.top+toRect.height*(0.2+Math.random()*0.6),
+    toName, toRect, cellSize,
+    fromColor:QUAD_GHOST_COLOR[fromName],
+    toColor:QUAD_GHOST_COLOR[toName],
+    startTime:performance.now(),
+    duration:2200+Math.random()*1600,
+    trail:[]
+  };
+  scheduleNextGhost();
+}
+
+function lerpColor(hexA,hexB,t){
+  const a=[1,3,5].map(i=>parseInt(hexA.slice(i,i+2),16));
+  const b=[1,3,5].map(i=>parseInt(hexB.slice(i,i+2),16));
+  const c=a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+function drawGlassSquare(gctx,cx,cy,size,tint,alpha){
+  const x=cx-size/2, y=cy-size/2;
+  gctx.save();
+  gctx.globalAlpha=alpha;
+  // Whitish frosted base — same material as the grid tiles
+  gctx.fillStyle='rgba(255,255,255,0.55)';
+  gctx.fillRect(x,y,size,size);
+  // Color tint, blended lightly so it stays whitish overall
+  gctx.globalAlpha=alpha*0.4;
+  gctx.fillStyle=tint;
+  gctx.fillRect(x,y,size,size);
+  // Bevel: light top/left, dark bottom/right
+  gctx.globalAlpha=alpha;
+  gctx.lineWidth=1;
+  gctx.strokeStyle='rgba(255,255,255,0.85)';
+  gctx.beginPath();
+  gctx.moveTo(x,y+size);gctx.lineTo(x,y);gctx.lineTo(x+size,y);
+  gctx.stroke();
+  gctx.strokeStyle='rgba(0,0,0,0.45)';
+  gctx.beginPath();
+  gctx.moveTo(x+size,y);gctx.lineTo(x+size,y+size);gctx.lineTo(x,y+size);
+  gctx.stroke();
+  gctx.restore();
+}
+
+function drawGhostNode(){
+  const gc=document.getElementById('ghost-canvas');
+  if(!gc) return;
+  if(!ghostCtx) ghostCtx=gc.getContext('2d');
+  if(gc.width!==window.innerWidth||gc.height!==window.innerHeight){
+    gc.width=window.innerWidth; gc.height=window.innerHeight;
+  }
+  ghostCtx.clearRect(0,0,gc.width,gc.height);
+  if(!ghostNode) return;
+
+  const now=performance.now();
+  const raw=Math.min(1,(now-ghostNode.startTime)/ghostNode.duration);
+  const t=raw<0.5 ? 2*raw*raw : 1-Math.pow(-2*raw+2,2)/2; // ease-in-out
+  const x=ghostNode.sx+(ghostNode.ex-ghostNode.sx)*t;
+  const y=ghostNode.sy+(ghostNode.ey-ghostNode.sy)*t;
+  const col=lerpColor(ghostNode.fromColor, ghostNode.toColor, t);
+
+  // Fade out over the last stretch of the trip, so it dissolves into the
+  // destination pad instead of just vanishing the instant it arrives
+  const fadeStart=0.72;
+  const arrivalFade = raw>fadeStart ? Math.max(0, 1-(raw-fadeStart)/(1-fadeStart)) : 1;
+
+  ghostNode.trail.push({x,y});
+  if(ghostNode.trail.length>14) ghostNode.trail.shift();
+
+  // Trail — small fading glass-block squares, sized to match the cell
+  // they came from, whitish like the grid tiles
+  const cs=ghostNode.cellSize||13;
+  ghostNode.trail.forEach((p,i)=>{
+    const age=(i+1)/ghostNode.trail.length;
+    drawGlassSquare(ghostCtx, p.x, p.y, cs*(0.5+age*0.5), col, age*0.15*arrivalFade);
+  });
+
+  // Head — one glass block matching the source cell size, with a soft
+  // square glow behind it
+  ghostCtx.save();
+  ghostCtx.globalAlpha=0.08*arrivalFade;
+  ghostCtx.fillStyle=col;
+  ghostCtx.fillRect(x-cs,y-cs,cs*2,cs*2);
+  ghostCtx.restore();
+  drawGlassSquare(ghostCtx, x, y, cs, col, 0.28*arrivalFade);
+
+  if(raw>=1){
+    // Arrived — join the destination's kaleidoscope trail (visual only)
+    const r=ghostNode.toRect;
+    const nx=clamp((ghostNode.ex-r.left)/r.width,0,1);
+    const ny=clamp(1-(ghostNode.ey-r.top)/r.height,0,1);
+    const trail=VIZ[ghostNode.toName].trail;
+    for(let k=0;k<4;k++){ trail.push({x:nx,y:ny}); } // a little cluster so it lights up clearly
+    if(trail.length>TRAIL_MAX) trail.splice(0, trail.length-TRAIL_MAX);
+    spawnRipple(ghostNode.toName, ghostNode.ex, ghostNode.ey);
+    ghostNode=null;
+  }
+}
+
 function drawAllQuads(){
   // Sync crosshairs from state — safe here in rAF, not in setInterval
   ['drums','bass','lead','tex'].forEach(name=>{
@@ -2577,6 +3446,16 @@ function drawAllQuads(){
     }
     drawQuad(name);
   });
+
+  // Synth visualizer fades out when silent and has no loop running —
+  // no live note, no loop = nothing "behind the glass" to show
+  const texCanvas=document.getElementById('c-tex');
+  if(texCanvas){
+    const texActive = STATE.tex.playing || (synthGestureLoop && synthGestureLoop.length>0);
+    texCanvas.style.opacity = texActive ? '1' : '0.12';
+  }
+
+  drawGhostNode();
   rafId=requestAnimationFrame(drawAllQuads);
 }
 
@@ -2801,7 +3680,7 @@ function spawnRipple(name,cx,cy){
   div.style.left=(cx-r.left)+'px';
   div.style.top=(cy-r.top)+'px';
   div.style.width='40px';div.style.height='40px';
-  const colors={drums:'var(--drums-c)',bass:'var(--bass-c)',lead:'var(--lead-c)',tex:'var(--tex-c)'};
+  const colors={drums:'var(--drums-c)',bass:'var(--bass-c)',lead:'var(--lead-c)',tex:'var(--perc-c)'};
   div.style.color=colors[name];
   el.appendChild(div);
   setTimeout(()=>div.remove(),550);
@@ -3108,6 +3987,7 @@ document.getElementById('start-btn').addEventListener('click',()=>{
   currentScaleName=pick(scaleKeys); currentIntervals=SCALES[currentScaleName];
   currentRootName=pick(rootKeys);   currentRootHz=ROOTS[currentRootName][0];
   globalSteps=pick([4,5,6,7,8]);
+  document.getElementById('topbar-title').textContent = currentRootName+' '+currentScaleName;
 
   // Initial XY positions
   CH.drums.xyX=0.5; CH.drums.xyY=0.6;
@@ -3182,6 +4062,32 @@ document.getElementById('start-btn').addEventListener('click',()=>{
   document.getElementById('synccount-btn').addEventListener('click', triggerSyncCount);
   document.getElementById('synccycle-btn').addEventListener('click', triggerSyncCycle);
 
+  // ── GLOBAL GLITCH — press and hold to engage, release to return to normal
+  (function setupGlitchButton(){
+    const btn=document.getElementById('glitch-btn');
+    if(!btn) return;
+    btn.addEventListener('touchstart', e=>{ e.preventDefault(); engageGlitch(); },{passive:false});
+    btn.addEventListener('touchend',   e=>{ e.preventDefault(); releaseGlitch(); },{passive:false});
+    btn.addEventListener('touchcancel',()=>releaseGlitch());
+    btn.addEventListener('mousedown', e=>{ e.preventDefault(); engageGlitch(); });
+    window.addEventListener('mouseup', ()=>releaseGlitch());
+    btn.addEventListener('mouseleave', e=>{ if(e.buttons!==1) releaseGlitch(); });
+  })();
+
+  (function setupHalfSpeedButton(){
+    const btn=document.getElementById('halfspeed-btn');
+    if(!btn) return;
+    btn.addEventListener('click', toggleHalfSpeed);
+    btn.addEventListener('touchend', e=>{ e.preventDefault(); toggleHalfSpeed(); },{passive:false});
+  })();
+
+  (function setupTempoFilterButton(){
+    const btn=document.getElementById('tempofilter-btn');
+    if(!btn) return;
+    btn.addEventListener('click', toggleTempoFilter);
+    btn.addEventListener('touchend', e=>{ e.preventDefault(); toggleTempoFilter(); },{passive:false});
+  })();
+
   // ── HINT OVERLAYS — fade after 6s or on first touch per quad
   function dismissHint(id){
     const el=document.getElementById(id);
@@ -3202,6 +4108,7 @@ document.getElementById('start-btn').addEventListener('click',()=>{
 
   startPlay();
   drawAllQuads();
+  scheduleNextGhost();
 
   window.addEventListener('resize',()=>{
     // canvases resize themselves in drawAllQuads
